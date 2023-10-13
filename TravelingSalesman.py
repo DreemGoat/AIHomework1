@@ -12,6 +12,7 @@ G = {
     "f": [("a", 999), ("b", 999), ("c", 999), ("d", 10), ("e", 6), ("f", 9)],
     "g": [("a", 12), ("b", 999), ("c", 9), ("d", 999), ("e", 7), ("f", 9)]
 }
+#nodes that aren't connected to a specific node are given the weight 999 with that node to avoid errors
 
 # Define parameters
 population_size = 100
@@ -19,23 +20,23 @@ generations = 200
 initial_mutation_rate = 0.5
 
 def create_individual():
-    cities = list(G.keys())
-    cities.remove("a")
-    random.shuffle(cities)
-    return ['a'] + cities
+    nodes = list(G.keys())
+    nodes.remove("a")
+    random.shuffle(nodes)
+    return ['a'] + nodes
 
 def calculate_distance(route):
     total_distance = 0
     for i in range(len(route) - 1):
-        current_city = route[i]
-        next_city = route[i + 1]
-        for neighbor, distance in G[current_city]:
-            if neighbor == next_city:
+        current_node = route[i]
+        next_node = route[i + 1]
+        for neighbor, distance in G[current_node]:
+            if neighbor == next_node:
                 total_distance += distance
                 break
 
-    last_city = route[-1]
-    for neighbor, distance in G[last_city]:
+    last_node = route[-1]
+    for neighbor, distance in G[last_node]:
         if neighbor == route[0]:
             total_distance += distance
             break
@@ -44,8 +45,8 @@ def calculate_distance(route):
 
 def crossover(parent1, parent2):
     crossover_point = random.randint(1, len(parent1) - 1)
-    child1 = parent1[:crossover_point] + [city for city in parent2 if city not in parent1[:crossover_point]]
-    child2 = parent2[:crossover_point] + [city for city in parent1 if city not in parent2[:crossover_point]]
+    child1 = parent1[:crossover_point] + [node for node in parent2 if node not in parent1[:crossover_point]]
+    child2 = parent2[:crossover_point] + [node for node in parent1 if node not in parent2[:crossover_point]]
     return child1, child2
 
 def mutate(individual, mutation_rate):
